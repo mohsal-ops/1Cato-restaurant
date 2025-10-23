@@ -43,5 +43,6 @@ next-env.d.ts
 
 # Ignore Google Service Account JSON
 src/app/admin/service-account.json
+src/app/admin/service-account.json:1
 
 
