@@ -41,18 +41,27 @@ export default function ProductForm({
   );
   const [CategoryId, setCategoryId] = useState<string>("");
 
+  // New catering states
+  const [isCaterable, setIsCaterable] = useState<boolean>(false);
+  const [cateringPriceInCents, setCateringPriceInCents] = useState<number>(
+    item?.cateringPriceInCents || 0,
+  );
+
+
+
   useEffect(() => {
     if (state?.message) {
       toast({
         variant:
-          state.message === "item added succefuly" ? "default" : "destructive", // Success or error styling
-        description: `${state.message}`, // Show the returned message
+          state.message === "item added succefuly" ? "default" : "destructive",
+        description: `${state.message}`,
       });
     }
   }, [state]);
 
+
   return (
-    <div className="lg:flex justify-center">
+    <div className="lg:flex justify-center pb-10">
       <form action={formAction} className="space-y-4 lg:w-[80%] ">
         <PageHeader>add new</PageHeader>
         <div className="space-y-2">
@@ -146,7 +155,7 @@ export default function ProductForm({
               <p>add category</p>
             </span>
           </Link>
-          
+
           {/* Hidden Input to send selected category */}
           <Input
             type="hidden"
@@ -157,7 +166,54 @@ export default function ProductForm({
           />
         </div>
 
-        <Button disabled={pending || CategoryId == ""} type="submit">
+        {/* ✅ New Catering Section */}
+        <div className="space-y-2 border-t pt-4">
+          <Label className="flex justify-start items-center w-20  gap-2 text-sm cursor-pointer">
+            <Input
+              type="checkbox"
+              name="isCaterable"
+              checked={isCaterable}
+              value="true"   // always "true" when checked
+              onChange={(e) => setIsCaterable(e.target.checked)}
+            />
+            Available for Catering
+          </Label>
+
+          {isCaterable && (
+            <div className="space-y-2">
+              <div>
+                <Label htmlFor="cateringDescription" className=" text-sm ">
+                  Catering Dish Description
+                </Label>
+                <Textarea
+                  id="cateringDescription"
+                  name="cateringDescription"
+                  defaultValue={item?.cateringDescription || ""}
+                />
+              </div>
+              <div>
+                <Label htmlFor="cateringPriceInCents" className=" text-sm ">
+                  Catering Price In Cents
+                </Label>
+                <Input
+                  type="number"
+                  id="cateringPriceInCents"
+                  name="cateringPriceInCents"
+                  defaultValue={item?.cateringPriceInCents || 0}
+                  className="w-full h-8 border focus:outline-none focus:border-neutral-300 pl-2 border-neutral-200"
+                  onChange={(e) =>
+                    setCateringPriceInCents(Number(e.target.value) || 0)
+                  }
+                />
+                <div className="text-muted-foreground">
+                  {formatCurrency((cateringPriceInCents || 0) / 100)}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Button variant='outline' disabled={pending || CategoryId == ""} type="submit">
           {pending ? "saving..." : "save"}
         </Button>
       </form>

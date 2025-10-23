@@ -1,17 +1,27 @@
-import React from 'react'
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+'use client'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { TextAlignJustify } from 'lucide-react';
 
 
 export default function AppSideBar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close sheet on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
   const links = [
     {
       name: "Menu",
-      link:"Menu"
+      link: "Menu"
     },
     {
       name: "Catering",
-      link: "Catering"
+      link: "Menu/Catering"
     },
     {
       name: "Host an event",
@@ -25,30 +35,32 @@ export default function AppSideBar() {
       name: "Marketing Collaboration",
       link: "MarketingCollab"
     },
-    ]
+  ]
+
   return <>
-   <div className="flex  overflow-auto gap-8 justify-center w-full py-1">                    
-      <Sidebar >
-              <SidebarContent>
-                <SidebarGroup>
-                  <SidebarGroupLabel>Application</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {links.map((obj, key) => (
-                        <Link
-                          key={key}
-                          className="hover:bg-zinc-100 hover:duration-300 rounded-md text-center px-2 font-medium py-2"
-                          href={`/${obj.link}`}
-                        >
-                          {obj.name}
-                        </Link>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              </SidebarContent>
-            </Sidebar>          
+    <div className="flex overflow-auto gap-8 justify-center   ">
+      <Sheet open={isOpen} onOpenChange={setIsOpen} >
+        <SheetTrigger className='h-20 w-16  flex justify-center items-center'>
+          <TextAlignJustify />
+        </SheetTrigger>
+        <SheetContent aria-describedby={undefined}>
+          <SheetHeader className="relative sr-only">
+            <SheetTitle>Side Bar Menu</SheetTitle>
+          </SheetHeader>
+          <div className='flex flex-col gap-2 items-center justify-center '>
+            {links.map((obj, key) => (
+              <Link
+                key={key}
+                className="hover:bg-zinc-100 hover:duration-300 rounded-md text-center px-2 font-medium py-2"
+                href={`/${obj.link}`}
+              >
+                {obj.name}
+              </Link>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   </>
-  
+
 }

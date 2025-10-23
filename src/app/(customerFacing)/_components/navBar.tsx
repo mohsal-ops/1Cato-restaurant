@@ -1,118 +1,142 @@
-"use client";
-
+'use client'
 import Image from "next/image";
 import Link from "next/link";
-import {  useState } from "react";
-import { PiShoppingCartSimpleFill } from "react-icons/pi";import { TbUserFilled } from "react-icons/tb";
 import Logo from "../../../../public/general/logo.png"
 import AppSideBar from "./sideBar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { CartItem } from "@prisma/client";
+import CartSideBar from "./Cart-SideBar";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { usePathname } from "next/navigation";
 
-// export function NavBarOrSideBar() {
-//   const [screenSize, setscreenSize] = useState<number>()
 
-//   useEffect(() => {
-//     setscreenSize(window.innerWidth) 
-//   },[])
 
-//   return <nav>{screenSize && screenSize > 640 && <TopNavBar />}</nav>;
-// }
 
-// export function NavLink(props: Omit<ComponentProps<typeof Link>, "className">) {
 
-//   //sodeBarItems
-
-//   const pathname = usePathname();
-//   return (
-//     <Link
-//       {...props}
-//       className={cn(
-//         "p-4 hover:bg-secondary hover:text-secondary-foreground focus-visible:bg-secondary focus-visible:text-secondary-foreground duration-200",
-//         pathname === props.href && "bg-background text-foreground"
-//       )}
-//     />
-//   );
-// }
-
-export function SideBar() {
-  
-
-  return ( 
-      <div className="flex w-full justify-between h-20 items-center">
-        <div className="flex items-center justify-center w-32">
+export function SideBar({ pathname }: { pathname: string }) {
+  return (
+    <div className="flex w-full  justify-between h-20 items-center ">
+      <div className="flex items-center justify-center pl-7">
         <Link href="/">
-          <Image alt="snow cone logo" src={Logo} height={50} width={50} />
+          <Image alt="snow cone logo" priority   className=" w-auto h-auto" src={Logo} height={50} width={50} />
         </Link>
       </div>
 
-      <div>
-        <AppSideBar/>
-        <SidebarTrigger/>
-        
-        
+      <div className="flex items-center gap-4 pr-7">
+        {pathname !== '/Menu' && (
+          <Button asChild size="md" variant="outline" className="text-md border-gray-300">
+            <Link href="/Menu">Menu</Link>
+          </Button>
+        )}
+        <div className="flex w-7 justify-center items-center">
+          <AppSideBar />
         </div>
       </div>
+
+
+
+    </div>
   );
 }
+
 export function TopNavBar() {
+  const pathname = usePathname()
   const links = [
     {
       name: "Menu",
-      link: "Menu"
+      link: "/Menu"
     },
     {
       name: "Catering",
-      link: "Catering"
+      link: "/Menu/Catering"
     },
     {
       name: "Host an event",
-      link: "HostEvent"
+      link: "/HostEvent"
     },
     {
       name: "Gift Card",
-      link: "GiftCard"
+      link: "/GiftCard"
     },
+    // {
+    //   name: "Blog",
+    //   link: "/Blog",
+
+    // },
     {
       name: "Marketing Collaboration",
-      link: "MarketingCollab"
+      link: "/MarketingCollab"
     },
   ]
-  const [NumberOfBagItems, setNumberOfBagItems] = useState<number>(0);
+  const [cartId, setCartId] = useState<string | null>(null);
 
-   // Depend on `pathname` to trigger the effect on route change
+
+
+
+  useEffect(() => {
+    const fetchCartId = async () => {
+      const res = await fetch("/api/getcartId")
+      const data = await res.json();
+      setCartId(data.cartId);
+    };
+    fetchCartId();
+
+  }, []);
+  const fetcher = (url: string) =>
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-cart-id": cartId ?? "",
+      },
+    }).then((res) => res.json());
+
+
+
+  const { data: CartResObj } = useSWR(cartId ? "/api/cart/get" : null, fetcher);
+  const cartItems = (CartResObj?.cart?.items ?? []) as CartItem[]
 
   return (
-    <div className=" shadow-sm">
-      <div className="flex md:hidden">
-        <SideBar/>
+    <div className="bg-white flex justify-center " >
+      <div className="flex w-full md:hidden">
+        <SideBar pathname={pathname} />
+        {cartItems.length > 0 && (
+          <div className="fixed bottom-1 right-2 left-2 rounded-md flex justify-center z-50">
+            <CartSideBar cartId={cartId} cartItems={cartItems} />
+          </div>
+        )}
+
       </div>
 
-      <div className="hidden md:flex justify-between h-16 md:h-20 items-center  ">
-        <div className="flex items-center justify-center w-32">
+      <div className="hidden md:flex justify-between h-16 md:h-20 md:w-[80%]  items-center ">
+        <div className="flex items-center justify-center w-auto ">
           <Link href="/">
-            <Image alt="snow cone logo" src={Logo} height={50} width={50} />
-          </Link>        </div>
-
-        <div className="flex overflow-auto gap-8 justify-center w-full py-1">
-          {links.map((obj, key) => (
-            <Link
-              key={key}
-              className="hover:bg-zinc-100 hover:duration-300 rounded-md text-center px-2 text-lg text-gray-700 font-medium py-2"
-              href={`/${obj.link}`}
-            >
-              {obj.name}
-            </Link>
-          ))}
-        </div>
-          <div className="flex items-center justify-start w-40">
-          <Link href={'/Menu'}>
-            <Button variant={NumberOfBagItems > 0 ?"destructive":"outline"} className="flex justify-center rounded-xl h-12">
-              <PiShoppingCartSimpleFill />              
-              <div className={NumberOfBagItems === 0 ?'hidden':''}>{NumberOfBagItems}</div>
-            </Button>
+            <Image alt="snow cone logo" className="w-auto h-auto" src={Logo} height={60} width={60} />
           </Link>
         </div>
+        <div className="flex justify-end gap-4 items-center">
+          <div className="flex overflow-auto gap-2 justify-center w-full py-1">
+            {links.map((obj, key) => {
+              const isActive = pathname == '/' + obj.link;
+              return (
+                <Button key={key} className={`font-medium text-md ${isActive && "bg-stone-200 text-accent-foreground "}`} variant='ghost'>
+                  <Link
+
+                    href={obj.link}
+                    className=' text-gray-600'>
+                    {obj.name}
+                  </Link>
+                </Button>
+
+              );
+            })}
+          </div>
+          <div >
+            <CartSideBar cartId={cartId} cartItems={cartItems} />
+          </div>
+        </div>
+
+
       </div>
 
     </div>

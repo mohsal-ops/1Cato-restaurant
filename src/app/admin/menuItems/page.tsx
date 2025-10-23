@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import PageHeader from "../_components/pageHeader";
 import Link from "next/link";
@@ -26,7 +27,7 @@ import ActivateAndDesactivate, {
 } from "./_components/productsActions";
 
 export default async function Items() {
-  const items = await db.item.findMany();
+  const items = await db.item?.findMany();
   const itemAndTypeFunction = async (items: any[]) => {
     return await Promise.all(
       items.map(async (item) => {
@@ -50,7 +51,7 @@ export default async function Items() {
         <div className="flex justify-between  ">
           <PageHeader>Menu Items</PageHeader>
           <Link href="/admin/menuItems/new">
-            <Button className="p-5 text-md">add item</Button>
+            <Button variant="outline" className="p-5 text-md">add item</Button>
           </Link>
         </div>
         <div>
@@ -100,11 +101,14 @@ export default async function Items() {
                         <MoreVertical />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <IsFeaturedOrNot id={obj?.id} isProductFeatured={ obj?.featured} />
+                        <IsFeaturedOrNot id={obj?.id} isProductFeatured={obj?.featured} />
                         <ActivateAndDesactivate
                           id={obj?.id}
                           isAvailableForPurchase={obj?.isAvailableForPurchase}
                         />
+                        <DropdownMenuItem >
+                          <Link href={`/admin/products/${obj.id}/edit`}>Edit</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DeleteItemComp id={obj?.id} />
                       </DropdownMenuContent>

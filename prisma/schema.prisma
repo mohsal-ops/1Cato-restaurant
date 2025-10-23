@@ -10,20 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model Item {
-  id                       String  @id @default(uuid())
-  name                     String
-  description              String
-  priceInCents             Int
-  slug                     String  @unique
-  isAvailableForPurchase   Boolean @default(true)
-  featured                 Boolean @default(false)
-  image                    String
-  typeId                   String
-  type                     Types   @relation(fields: [typeId], references: [id], onDelete: Restrict)
-  orders                   Order[]
+  id                     String  @id @default(uuid())
+  name                   String
+  description            String
+  priceInCents           Int
+  slug                   String  @unique
+  isAvailableForPurchase Boolean @default(true)
+  featured               Boolean @default(false)
+  image                  String
+  typeId                 String
+  type                   Types   @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  orders                 Order[]
+  isCaterable            Boolean @default(false)
+  cateringDescription    String?
+  cateringPriceInCents   Int?
 }
 
 model User {
@@ -35,11 +36,18 @@ model User {
 }
 
 model Types {
-  id     String @id @default(uuid())
-  name   String
-  image  String?
-  slug   String  @unique
-  items  Item[]   
+  id    String @id @default(uuid())
+  name  String
+  slug  String @unique
+  items Item[]
+}
+
+model Location {
+  id        String   @id @default(uuid())
+  name      String
+  lat       Float
+  lng       Float
+  createdAt DateTime @default(now())
 }
 
 model Order {
@@ -51,4 +59,25 @@ model Order {
   productId        String
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product          Item     @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     CartItem[]      
+  status    String     @default("open") // open/completed/abandoned
+}
+
+model CartItem {
+  id         String   @id @default(uuid())
+  image      String?
+  productId  String?
+  name       String?
+  pickupDay  DateTime
+  pickupTime String
+  price      Int?
+  quantity   Int?
+  cartId     String
+  cart       Cart      @relation(fields: [cartId], references: [id])
 }

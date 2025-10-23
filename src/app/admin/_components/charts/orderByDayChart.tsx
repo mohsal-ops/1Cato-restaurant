@@ -1,15 +1,13 @@
 "use client";
 import { formatCurrency } from "@/lib/formatters";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+
+
+import dynamic from 'next/dynamic';
+import { CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+
+const LineChart = dynamic(() => import('recharts').then(mod => mod.LineChart), {
+  ssr: false,
+});
 
 type OrderByDayChartProp = {
   data: {

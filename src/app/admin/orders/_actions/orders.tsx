@@ -1,10 +1,11 @@
 'use server'
 import db from "@/db/db";
+import { cache } from "@/lib/handleCaching";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 
-export default async function GetProducts() {
+export const GetProducts= cache(async ()=>{
      const orders = await db.order.findMany();
 
   const eachitemAndItsCategoryObjects = async (orders: any[]) => {
@@ -28,10 +29,13 @@ export default async function GetProducts() {
       }),
     );
   };
+  
   const products = await db.item.findMany()
     const data = await eachitemAndItsCategoryObjects(orders);
     return {products,data}
-}
+},["products"]) 
+
+
 
 
 const AddOrderSchema = z.object({
@@ -45,8 +49,8 @@ export async function AddOrder(prevSatate: unknown, formData: FormData) {
       Object.fromEntries(formData.entries()),
     );
     if (result.success === false) {
-      console.log(result.error.formErrors)
-      return { message: result.error.formErrors.fieldErrors };
+      console.log(result.error.message )
+      return { message: result.error.message };
       }
       
       
@@ -92,7 +96,6 @@ export async function AddOrder(prevSatate: unknown, formData: FormData) {
 
       },
     });
-      console.log('3')
 
 
     revalidatePath("/admin");
@@ -105,7 +108,6 @@ export async function AddOrder(prevSatate: unknown, formData: FormData) {
         message: "This name already exists. Please choose a different one.",
       };
     }
-      console.log('4')
       console.log(error)
 
 

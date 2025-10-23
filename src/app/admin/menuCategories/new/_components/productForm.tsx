@@ -1,15 +1,12 @@
 "use client";
 
-import { AddCategory, updateProduct } from "@/app/admin/_actions/products";
+import { AddCategory } from "@/app/admin/_actions/products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { formatCurrency } from "@/lib/formatters";
 import { Item } from "@prisma/client";
 import { Label } from "@radix-ui/react-label";
 import { useActionState, useEffect } from "react";
-import { useFormState } from "react-dom";
 
 const initialState = {
   message: "",
@@ -44,19 +41,7 @@ export default function ProductForm({ item }: { item: Item | null }) {
             defaultValue={item?.name}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="image" className=" text-sm ">
-            Image
-          </Label>
-          <Input
-            type="file"
-            required
-            id="iamge"
-            name="image"
-            defaultValue={item?.name}
-          />
-        </div>
-        <Button disabled={pending} type="submit">
+        <Button variant='outline' disabled={pending} type="submit">
           {pending ? "saving..." : "save"}
         </Button>
       </form>

@@ -7,7 +7,6 @@ const analytics = google.analyticsdata("v1beta");
 
 export  async function GET(req : NextRequest, res :NextResponse ) {
     try {
-        console.log('starts fetching buddy')
 
         const auth = new google.auth.GoogleAuth({
             keyFile: "D:/next-js/projects/restaurant/src/app/admin/service-account.json", // Replace with your service account key
@@ -23,7 +22,6 @@ export  async function GET(req : NextRequest, res :NextResponse ) {
                 dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
             },
         });
-        console.log(JSON.stringify(analyticsClient.data))
         return new Response(JSON.stringify(analyticsClient.data))
 
     } catch (error) {

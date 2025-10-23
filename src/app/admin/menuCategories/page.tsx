@@ -30,10 +30,10 @@ export default async function Items() {
     select: {
       id: true,
       name: true,
-      image: true,
       _count: { select: { items: true } },
     },
   });
+
 
       // <div className="lg:flex justify-center">
       // <div className="p-5 space-y-3 w-full lg:w-[80%]"></div>
@@ -44,7 +44,7 @@ export default async function Items() {
       <div className="flex justify-between w-full ">
         <PageHeader>Menu Categories</PageHeader>
         <Link href="/admin/menuCategories/new">
-          <Button>add category</Button>
+          <Button variant="outline">add category</Button>
         </Link>
       </div>
       <div>
@@ -57,7 +57,6 @@ export default async function Items() {
 
           <TableHeader>
             <TableRow>
-              <TableHead>image</TableHead>
               <TableHead>Category</TableHead>
               <TableHead className="w-0">
                 <span className="sr-only">Actions</span>
@@ -67,14 +66,6 @@ export default async function Items() {
           <TableBody>
             {categories.map((cate) => (
               <TableRow key={cate?.id}>
-                <TableCell>
-                  <Image
-                    src={`${cate?.image}` as string}
-                    height={50}
-                    width={50}
-                    alt="image"
-                  />
-                </TableCell>
                 <TableCell>{cate?.name}</TableCell>
                 <TableCell>
                   <DropdownMenu>

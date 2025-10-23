@@ -1,4 +1,6 @@
+import { Toaster } from "@/components/ui/sonner";
 import { AdminNav, NavLink } from "./_components/nav";
+
 
 export default function Adminlayout({
   children,
@@ -15,8 +17,12 @@ export default function Adminlayout({
         <NavLink href="/admin/menuCategories">Menu Categories</NavLink>
         <NavLink href="/admin/users">Customers</NavLink>
         <NavLink href="/admin/orders">Sales</NavLink>
+        <NavLink href="/admin/places">Places</NavLink>
       </AdminNav>
-      <div className="container overflow-auto">{children}</div>
+      <div className="container  overflow-auto">{children}</div>
+      <Toaster  />
+
+
     </>
   );
 }

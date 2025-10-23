@@ -4,13 +4,17 @@ import { z } from "zod";
 import fs from "node:fs/promises";
 import db from "@/db/db";
 import { notFound } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import ProductForm from "../menuCategories/new/_components/productForm";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-const fileSchema = z.instanceof(File, { message: "Required" });
+
+
+const fileSchema = z.instanceof(File, { error: "Required" });
 const imageSchema = fileSchema.refine(
   (file) => file.size === 0 || file.type.startsWith("image/"),
 );
+
+
+
 
 const addSchema = z.object({
   name: z.string().min(2),
@@ -19,9 +23,14 @@ const addSchema = z.object({
   category: z
     .string()
     .min(1)
-    .refine((val) => !val.startsWith("[object"), {
-      message: "Invalid category format",
+    .refine((val) => !val.startsWith("[object]"), {
+      error: "Invalid category format",
     }),
+  isCaterable: z.preprocess(
+  (val) => val === "true",
+  z.boolean()),
+  cateringDescription: z.string().min(2),
+  cateringPriceInCents: z.coerce.number().int().min(1),
   image: imageSchema.refine((file) => file.size > 0, "Required"),
 });
 export default async function AddProduct(
@@ -31,8 +40,11 @@ export default async function AddProduct(
   try {
     const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
     if (result.success === false) {
+      console.log(result.error.issues)
+
+
       return {
-        message: Object.assign({}, result.error.formErrors.fieldErrors),
+        error: Object.assign({}, result.error.issues),
       };
     }
     function createSlug(arg: string) {
@@ -51,7 +63,6 @@ export default async function AddProduct(
     }
 
     const data = { ...result.data, slug };
-    console.log("datatatat", formData);
 
     await fs.mkdir("public/products", { recursive: true });
     const image = `/products/${crypto.randomUUID()}-${data.image.name}`;
@@ -60,6 +71,7 @@ export default async function AddProduct(
       new Uint8Array(await data.image.arrayBuffer()),
     );
 
+
     await db.item.create({
       data: {
         name: data.name,
@@ -67,17 +79,19 @@ export default async function AddProduct(
         priceInCents: data.priceInCents,
         slug: data.slug,
         typeId: data.category,
+        isCaterable:data.isCaterable,
+        cateringDescription:data.cateringDescription,
+        cateringPriceInCents:data.cateringPriceInCents,
         image,
       },
     });
     revalidatePath("/admin");
     revalidatePath("/admin/menuItems");
-    revalidatePath("/products");
-
+    revalidatePath("/Menu");
+    revalidateTag('products')
     return { message: "item added succefuly" };
   } catch (error) {
-    console.log("3");
-    return { message: error };
+    return { message : error};
   }
 }
 
@@ -93,7 +107,7 @@ export async function updateProduct(
 ) {
   const result = editSchema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
-    return { message: result.error.formErrors.fieldErrors as string };
+    return { error: result.error.issues };
   }
 
   const data = result.data;
@@ -121,12 +135,12 @@ export async function updateProduct(
   });
 
   revalidatePath("/");
-  revalidatePath("/products");
+  revalidateTag('products')
+  revalidatePath("/Menu");
 }
 
 const categorySchema = z.object({
   name: z.string().min(1),
-  image: imageSchema.refine((file) => file.size > 0, "Required"),
 });
 export async function AddCategory(prevSatate: unknown, formData: FormData) {
   try {
@@ -134,7 +148,7 @@ export async function AddCategory(prevSatate: unknown, formData: FormData) {
       Object.fromEntries(formData.entries()),
     );
     if (result.success === false) {
-      return { message: result.error.formErrors.fieldErrors };
+      return { error: result.error.issues };
     }
 
     function createSlug(arg: string) {
@@ -148,23 +162,18 @@ export async function AddCategory(prevSatate: unknown, formData: FormData) {
 
     const data = { ...result.data, slug };
 
-    await fs.mkdir("public/category", { recursive: true });
-    const image = `/category/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(
-      `public${image}`,
-      new Uint8Array(await data.image.arrayBuffer()),
-    );
+    
 
     await db.types.create({
       data: {
         name: data.name,
         slug: data.slug,
-        image,
       },
     });
 
     revalidatePath("/");
-    revalidatePath("/products");
+    revalidateTag('categorries')
+    revalidatePath("/Menu");
     return { message: "item added succefuly" };
   } catch (error: any) {
     // ✅ Check if it's a unique constraint error (Prisma error code P2002)
@@ -184,7 +193,8 @@ export async function toglleAvalability(
 ) {
   await db.item.update({ where: { id }, data: { isAvailableForPurchase } });
   revalidatePath("/");
-  revalidatePath("/products");
+  revalidatePath("/Menu");
+  revalidateTag("products");
   revalidatePath("/admin/menuItems");
 }
 export async function toglleFeaturing(
@@ -193,19 +203,22 @@ export async function toglleFeaturing(
 ) {
   await db.item.update({ where: { id }, data: { featured : isFeatured } });
   revalidatePath("/");
-  revalidatePath("/products");
+  revalidateTag("featured-products");
+  revalidatePath("/Menu");
   revalidatePath("/admin/menuItems");
 }
 export async function DeleteMenuItem(id: string) {
   await db.item.delete({ where: { id } });
   revalidatePath("/");
-  revalidatePath("/products");
+  revalidatePath("/Menu");
+  revalidateTag("products");
   revalidatePath("/admin/menuItems");
 }
 export async function DeleteCategory(id: string) {
   await db.types.delete({ where: { id } });
   revalidatePath("/");
-  revalidatePath("/products");
+  revalidatePath("/Menu");
+  revalidateTag("categorries");
   revalidatePath("/admin/menuCategories");
 }
 
