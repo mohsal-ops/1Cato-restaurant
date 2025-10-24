@@ -92,7 +92,7 @@ export default async function Home() {
         <SecondSection products={products} cartItems={cart?.items ?? []} />
         <ThirdSection />
         <ReviewsSection />
-        <div className="p-2 w-full">
+        <div className="p-2 w-full flex justify-center">
           <OrderDirectlyfromOUrWebsite />
         </div>
         <Featuring />
@@ -140,7 +140,7 @@ export function TopSection() {
 export function SecondSection({ products, cartItems }: { products: Item[], cartItems: CartItem[] }) {
 
   return (
-    <div className="flex-col space-y-6 p-3 sm:w-10/12 w-full">
+    <div className="flex-col space-y-6 p-3 sm:w-10/12 w-full  overflow-hidden">
       <div className="flex justify-between">
         <PageHeader>Featured</PageHeader>
         <Link href="/Menu"  >
@@ -149,7 +149,7 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
           </Button>
         </Link>
       </div>
-      <div className="grid grid-flow-col  justify-start gap-7 w-full  overflow-auto  pb-10">
+      <div className="grid grid-flow-col justify-start gap-7 w-full  overflow-auto  pb-10">
         <Suspense
           fallback={
             <>
@@ -213,12 +213,12 @@ export function ReviewsSection() {
     }
   ]
   return (
-    <div className=" flex flex-col items-center sm:w-[95%] p-10 space-y-10 bg-gray-100 rounded-4xl">
+    <div className=" flex flex-col items-center  md:w-10/12 p-10 space-y-10 bg-gray-100 rounded-4xl">
       <div className="text-center space-y-4">
         <PageHeader>What our guests are saying</PageHeader>
       </div>
 
-      <div className="grid grid-cols-1  md:grid-cols-3 sd:w-10/12 w-full  gap-6 ">
+      <div className="grid grid-cols-1  md:grid-cols-3 sm:w-10/12 w-full  gap-6 ">
         {reviews.map((Rev, key) =>
           <ReviewCard key={key} name={Rev.name} review={Rev.review} />
         )}
@@ -230,7 +230,7 @@ export function ReviewsSection() {
 
 export function OrderDirectlyfromOUrWebsite() {
   return (
-    <div className="relative flex items-end max-h-svh  rounded-3xl overflow-hidden   ">
+    <div className="relative flex items-end max-h-svh sm:w-10/12  rounded-3xl overflow-hidden   ">
       <Image priority src={mainImg} alt="best snow cone in NYC" className="object-cover w-full h-full" />
       <div className="p-1 - absolute  md:left-30  md:top-1/3 sm:w-[50rem] ">
         <Card className=" md:p-8 md:space-y-4 bg-stone-300 rounded-3xl  md:w-[45rem]">
