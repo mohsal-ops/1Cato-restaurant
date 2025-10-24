@@ -32,6 +32,9 @@ import { Button } from "@/components/ui/button";
 export const metadata = {
   title: "1Cato Snow Cones | Refreshing Snow Cones in NYC",
   description: "Order delicious, gluten-free, fat-free snow cones for schools, corporate events, and festivals in NYC. Book online or request a quote!",
+  icons: {
+    icon: "/logo.png",
+  },
   openGraph: {
     title: "1Cato Snow Cones | NYC",
     description: "Refreshing, natural snow cones for events and daily orders. Gluten-free, fat-free, and fully customizable.",
