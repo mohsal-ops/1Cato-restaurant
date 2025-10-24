@@ -102,7 +102,7 @@ export default function CartSideBar({ cartItems: initialItems, cartId }: { cartI
                         ) : (
                             <>
                                 <PiShoppingCartSimpleFill size={20} />
-                                <span>{quantity > 0 && quantity}</span>
+                                <span style={{ visibility: quantity > 0 ? 'visible' : 'hidden' }}>{quantity > 0 && quantity}</span>
                             </>
 
                         )}
@@ -110,7 +110,7 @@ export default function CartSideBar({ cartItems: initialItems, cartId }: { cartI
                     </div>
 
                 </SheetTrigger>
-                <SheetContent side={isMobile ? "bottom" : "right"}
+                <SheetContent aria-describedby={undefined} side={isMobile ? "bottom" : "right"}
                     className={isMobile ? "h-[90vh]" : "w-[400px]"}>
                     <SheetHeader>
                         <SheetTitle>Your Cart</SheetTitle>

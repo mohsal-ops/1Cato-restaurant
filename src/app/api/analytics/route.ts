@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 const analytics = google.analyticsdata("v1beta");
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_KEY!);
 
     const auth = new google.auth.GoogleAuth({
-      credentials: serviceAccount, // <- use credentials instead of keyFile
+      credentials: serviceAccount,
       scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
     });
 
@@ -22,9 +22,9 @@ export async function GET(req: NextRequest, res: NextResponse) {
       },
     });
 
-    return new Response(JSON.stringify(analyticsClient.data));
+    return NextResponse.json(analyticsClient.data);
   } catch (error) {
     console.error("Error fetching analytics:", error);
-    return new Response(JSON.stringify(error));
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }

@@ -8,6 +8,7 @@ import { AllDishesSuspense, PopularDishesSuspense } from './ProductSuspense'
 import PickupDetails from '../../_components/pickupTimeandDay'
 import { useSWRConfig } from 'swr'
 import { ProductCardSkeleton } from '../../_components/ProductCardServer'
+import { useRouter } from 'next/navigation'
 
 type PropsTypes = {
     places: Location[],
@@ -30,6 +31,7 @@ export default function MainPageMenu({cartItems, featuredProducts, style, places
     const [open, setOpen] = useState<boolean>(false)
 
     const { mutate } = useSWRConfig()
+    const Router = useRouter()
 
     // Tracks the serachbar so it fiex it or un-fix it 
     useEffect(() => {
@@ -95,6 +97,7 @@ export default function MainPageMenu({cartItems, featuredProducts, style, places
 
         }
         mutate('/api/cart/get')
+        Router.refresh()
     }, [cartItems])
 
 
@@ -157,14 +160,14 @@ export default function MainPageMenu({cartItems, featuredProducts, style, places
                         <div className='bg-stone-200 w-full shadow-sm sm:w-1/2 flex h-11 rounded-3xl overflow-hidden'>
                             <label className="cursor-pointer w-1/2 relative">
                                 <input
-                                    type="radio"
+                                    type=""
                                     name="orderType"
-                                    value="delivery"
-                                    checked={choice === "delivery"}
-                                    onChange={() => setChoice("delivery")}
-                                    className="hidden peer"
+                                   className='hidden peer'
                                 />
-                                <div className="h-full  bg-stone-200 border  flex items-center justify-center  rounded-3xl peer-checked:shadow-md peer-checked:border-gray-300 peer-checked:bg-white peer-checked:text-black transition">
+                                {/* <div className="h-full  bg-stone-200 border  flex items-center justify-center  rounded-3xl peer-checked:shadow-md peer-checked:border-gray-300 peer-checked:bg-white peer-checked:text-black transition">
+                                    Delivery
+                                </div> */}
+                                <div className="h-full  bg-stone-200 border  flex items-center justify-center  rounded-3xl ">
                                     Delivery
                                 </div>
                             </label>
@@ -263,8 +266,6 @@ export default function MainPageMenu({cartItems, featuredProducts, style, places
                 </div>
             </div>
             <PickupDetails open={open} onOpenChange={setOpen} />
-
-
         </div>
     )
 }

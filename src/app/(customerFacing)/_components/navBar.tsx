@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../../../public/general/logo.png"
+import Logo from "@/../public/general/logo.png"
 import AppSideBar from "./sideBar";
 import { CartItem } from "@prisma/client";
 import CartSideBar from "./Cart-SideBar";

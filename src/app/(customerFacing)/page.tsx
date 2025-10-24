@@ -1,9 +1,11 @@
 
 import Image from "next/image";
-import mainImg from '../../../public/general/mainImage.jpg'
+import mainImg from '@/../public/general/mainImage.jpg'
+import img2 from '@/../public/general/prod1.jpg'
+import img3 from '@/../public/general/vibe.jpg'
 import Link from "next/link";
 import PageHeader from "./_components/PageHeader";
-import { Suspense} from "react";
+import { Suspense } from "react";
 import { CartItem, Item, Location } from "@prisma/client";
 import { ProductSuspense } from "./Menu/_components/ProductSuspense";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -17,7 +19,7 @@ import { TbPlant2Off } from "react-icons/tb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Map from "@/components/map";
 import GetPlaces from "./_components/getPlaces";
-import Logo from "../../../public/general/logo.png"
+import Logo from "@/../public/general/logo.png"
 import { GetCartItems, GetFeaturedProducts } from "./Menu/_actions/getDataNeeded";
 import { ProductCardSkeleton } from "./_components/ProductCardServer";
 import { cookies } from "next/headers";
@@ -87,7 +89,7 @@ export default async function Home() {
       />
       <div className="flex pt-20 flex-col gap-8 items-center justify-center  md:space-y-20 space-y-10  [&>*:not(:first-child)]:m-2">
         <TopSection />
-        <SecondSection  products={products} cartItems={cart?.items ?? []}/>
+        <SecondSection products={products} cartItems={cart?.items ?? []} />
         <ThirdSection />
         <ReviewsSection />
         <div className="p-2 w-full">
@@ -95,13 +97,13 @@ export default async function Home() {
         </div>
         <Featuring />
         <DistinctiveFeatures />
-        <div className="p-2 w-full">
+        {/* <div className="p-2 w-full">
           <RewardsProgram />
-        </div>
+        </div> */}
         <div className="p-4 w-full flex justify-center">
           <Frequentlyaskedquestions />
         </div>
-        <OurLocation places={places} lat={lat} lng={lng}/>
+        <OurLocation places={places} lat={lat} lng={lng} />
 
       </div>
     </>
@@ -111,7 +113,7 @@ export default async function Home() {
 export function TopSection() {
   return (
     <div className="flex relative overflow-hidden max-h-svh sm:flex-row sm:w-[85%] flex-col bg-stone-100 sm:rounded-3xl sm:p-2 ">
-      <div className="sm:relative absolute z-30 bottom-9  flex flex-col gap-8 items-start justify-end mt-10 md:mb-20 md:w-1/2 p-5  md:p-12">
+      <div className="sm:relative absolute z-30 bottom-20  flex flex-col gap-8 items-start justify-end mt-10 md:mb-20 md:w-1/2 p-5  md:p-12">
         <span className="lg:text-5xl text-white sm:text-black text-4xl font-bold leading-10 lg:leading-[60px] "><h1 className="text-orange-500">Refreshing</h1> healthy, and guilt-free <span className="circle-sketch-highlight">
           snow cones
         </span>
@@ -167,7 +169,7 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
 
 export function ThirdSection() {
   return (
-   <ThirdSectionComponent/>
+    <ThirdSectionComponent />
   )
 }
 
@@ -181,7 +183,7 @@ function ReviewCard({ name, review }: { name: string, review: string }) {
         )}
         <FaStar />
       </CardHeader>
-      <CardContent className="font-semibold">
+      <CardContent className="font-normal">
         {review}
       </CardContent>
       <CardFooter className="flex justify-start gap-3">
@@ -254,7 +256,7 @@ export function DistinctiveFeatures() {
   return (
     <div className="flex flex-col space-y-5 md:w-10/12 rounded-3xl overflow-hidden ">
       <div className="flex md:flex-row flex-col justify-between  md:h-[33rem] h-full">
-        <Image priority src={mainImg} alt="Refreshing snow cones" className="object-cover md:w-[45%] w-full h-full rounded-3xl" />
+        <Image priority src={img2} alt="Refreshing snow cones" className="object-cover md:w-[45%] w-full h-full rounded-3xl" />
         <div className="flex flex-col space-y-7 p-5 justify-center   md:w-[45%] w-full h-full">
           <PageHeader>Only refreshing scow cones</PageHeader>
           <p className="text-lg font-medium text-gray-500">We invest in quality ingredients to ensure our customers get the great taste we're famous for. Because we believe that you deserve the best.</p>
@@ -262,10 +264,10 @@ export function DistinctiveFeatures() {
       </div>
       <div className="flex md:flex-row flex-col justify-between md:h-[33rem] h-full">
         <div className="flex md:order-1 order-2 flex-col space-y-7 p-5 justify-center   md:w-[45%] w-full h-full">
-          <PageHeader>Only refreshing scow cones</PageHeader>
-          <p className="text-lg font-medium text-gray-500">We invest in quality ingredients to ensure our customers get the great taste we're famous for. Because we believe that you deserve the best.</p>
+          <PageHeader>Sip, chill, and smile</PageHeader>
+          <p className="text-lg font-medium text-gray-500">Our drinks are made to refresh your day, using real fruits, balanced flavors, and the perfect chill for every moment.</p>
         </div>
-        <Image priority src={mainImg} alt="Refreshing snow cones" className="object-cover md:order-2 order-1 md:w-[45%] w-full h-full rounded-3xl" />
+        <Image priority src={img3} alt="Refreshing snow cones" className="object-cover flex items-start bg-amber-200 md:order-2 order-1 md:w-[45%] w-full h-full rounded-3xl" />
       </div>
 
     </div>
@@ -342,9 +344,8 @@ export function Frequentlyaskedquestions() {
       >
         <AccordionItem value="item-1">
           <AccordionTrigger >What are you known for?</AccordionTrigger>
-          <AccordionContent className="text-balance text-lg w-full font-semibold bg-sidebar-accent p-4 ">
-            We are known for Pizza, Cheese Pizza, Sandwiches, Garlic Bread, Spaghetti Carbonara, Deli Sandwiches, Carbonara, Minestrone Soup, Caprese, Pepperoni Pizza, Cannoli, Salads, Vegetarian Food, Cheesecake, Focaccia, Minestrone, Calzones, Spaghetti, Meatballs, Bolognese, Calzone, and Chicken Tenders
-          </AccordionContent>
+          <AccordionContent className="text-balance text-lg w-full font-medium bg-sidebar-accent p-4 ">
+            We’re known for our refreshing snow cones made with exotic and tropical flavors — like mango chili, passion fruit, blue raspberry, and coconut dream. Our signature blends are crafted with premium syrups, fresh ingredients, and just the right crunch of shaved ice that keeps our customers coming back for more!          </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
           <AccordionTrigger >What meals do you serve?</AccordionTrigger>
@@ -401,13 +402,19 @@ export function OurLocation({ places, lat, lng }: { places: Location[], lat: num
           </span>
         </div>
         <div className="flex justify-between items-center w-full py-2 border  border-t-gray-300">
-          <div>Workinh Hours</div>
-          <Link href="/HostEvent"  >
+          <div>
+            <p>Workinh Hours</p>
+            <span>9:00 AM - 6:00 PM</span>
+          </div>
+          <div>
+            <Link href="/HostEvent"  >
             <Button size="sm" variant="mainButton">
               Book an Event
               <MdKeyboardArrowRight />
             </Button>
           </Link>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -420,7 +427,7 @@ export function Footer() {
       <div className=" flex flex-col md:flex-row  md:justify-center w-full h-4/5">
         <div className="flex  items-start sm:h-full h-1/3 justify-center w-full md:w-32">
           <Link href="/">
-            <Image priority alt="snow cone logo"  className="w-auto h-auto" src={Logo} height={70} width={70} />
+            <Image priority alt="snow cone logo" className="w-auto h-auto" src={Logo} height={70} width={70} />
           </Link>
         </div>
         <div className="flex text-start md:space-x-20 text-sm items-start p-4 md:justify-center font-semibold w-full md:w-3/5 flex-col md:flex-row">
