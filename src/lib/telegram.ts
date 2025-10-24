@@ -1,26 +1,31 @@
 // src/lib/telegram.ts
-
 export async function sendTelegramMessage(message: string) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    console.error("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID");
+    return;
+  }
+
   try {
-    const isServer = typeof window === "undefined";
-
-    const url = isServer
-      ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/telegram/send`
-      : "/api/telegram/send";
-
-    const res = await fetch(url, {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: "HTML",
+      }),
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      console.error("Failed to send Telegram message:", errText);
+      const text = await res.text();
+      console.error("Failed to send Telegram message:", text);
     } else {
-      console.log("Message sent successfully!");
+      console.log("✅ Telegram message sent successfully");
     }
   } catch (err) {
-    console.error("Failed to send Telegram message:", err);
+    console.error("Error sending Telegram message:", err);
   }
 }
