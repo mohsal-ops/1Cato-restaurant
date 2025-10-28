@@ -162,7 +162,7 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
             </>
           }
         >
-          <ProductSuspense carId={cartId} cartItems={cartItems} products={products} />
+          <ProductSuspense  cartItems={cartItems} products={products} />
         </Suspense>
       </div>
     </div>

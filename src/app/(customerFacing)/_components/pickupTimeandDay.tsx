@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 import { useRouter } from "next/navigation"
+import { useCart } from "@/app/providers/CartProvider"
 
 
 
@@ -33,6 +34,7 @@ export default function PickupDetails({
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [showMoreDays, setShowMoreDays] = useState(false)
     const { mutate } = useSWRConfig();
+    const { cartId} = useCart()
     const router = useRouter()
 
 
@@ -68,7 +70,7 @@ export default function PickupDetails({
             });
             if (res.ok) {
                 const data = await res.json()
-                await mutate("/api/cart/get");
+                await mutate(["/api/cart/get", cartId]);
                 router.refresh()
                 toast(`${data.message}`)
 

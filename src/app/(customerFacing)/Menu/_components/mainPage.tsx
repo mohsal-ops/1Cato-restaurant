@@ -29,7 +29,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [open, setOpen] = useState<boolean>(false)
-    const { cartItems } = useCart();
+    const { cartItems,cartId } = useCart();
 
 
     const { mutate } = useSWRConfig()
@@ -98,7 +98,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
             setSelectedTime(time)
 
         }
-        mutate('/api/cart/get')
+        mutate(["/api/cart/get", cartId]);
         Router.refresh()
     }, [cartItems])
 
