@@ -29,10 +29,9 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [open, setOpen] = useState<boolean>(false)
-    const { cartItems,cartId } = useCart();
+    const { cartItems,cartId,mutate } = useCart();
 
 
-    const { mutate } = useSWRConfig()
     const Router = useRouter()
 
     // Tracks the serachbar so it fiex it or un-fix it 
@@ -98,7 +97,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
             setSelectedTime(time)
 
         }
-        // mutate(["/api/cart/get", cartId]);
+        mutate(["/api/cart/get", cartId]);
         Router.refresh()
     }, [])
 

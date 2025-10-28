@@ -33,8 +33,7 @@ export default function PickupDetails({
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [showMoreDays, setShowMoreDays] = useState(false)
-    const { mutate } = useSWRConfig();
-    const { cartId} = useCart()
+    const { cartId,mutate} = useCart()
     const router = useRouter()
 
 

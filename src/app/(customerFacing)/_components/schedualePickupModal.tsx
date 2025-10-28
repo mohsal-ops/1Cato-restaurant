@@ -289,10 +289,9 @@ export default function SchedulePickupDialog({
   const [TimeExist, setTimeExist] = useState<boolean>(false)
 
 
-  const { mutate } = useSWRConfig();
   
   const route = useRouter()
-  const {cartId } = useCart()
+  const {cartId,mutate } = useCart()
 
 
   useEffect(() => {

@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, ReactNode, useState, useEffect } from "react";
-import useSWR from "swr";
+import useSWR, { KeyedMutator } from "swr";
 
 interface CartContextType {
   cartItems: any[];
   cartId: string | null;
+  mutate: KeyedMutator<any>;
 }
 
 // Create context with correct type
@@ -40,16 +41,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []); // <-- runs only once
 
   // ✅ useSWR only runs when cartId is available
-  const { data: CartResObj } = useSWR(
+  const { data: CartResObj, mutate } = useSWR(
     cartId ? ["/api/cart/get", cartId] : null,
     ([url, id]) => fetcher(url, id),
-     { revalidateOnFocus: false }
+    { revalidateOnFocus: false }
   );
 
   const cartItems = CartResObj?.cart?.items ?? [];
 
   return (
-    <CartContext.Provider value={{ cartItems, cartId }}>
+    <CartContext.Provider value={{ cartItems, cartId, mutate }}>
       {children}
     </CartContext.Provider>
   );

@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { Minus, Plus } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSWRConfig } from 'swr';
+import { useCart } from '@/app/providers/CartProvider';
 
 
 export default function CartSideBar({ cartItems: initialItems, cartId }: { cartId: string | null, cartItems: CartItem[] }) {
@@ -17,7 +18,7 @@ export default function CartSideBar({ cartItems: initialItems, cartId }: { cartI
     const [cartItems, setCartItems] = useState<CartItem[]>(initialItems)
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname()
-    const { mutate } = useSWRConfig()
+    const { mutate } = useCart()
 
     // Close sheet automatically on route change
     useEffect(() => {
@@ -48,7 +49,7 @@ export default function CartSideBar({ cartItems: initialItems, cartId }: { cartI
                 method: "DELETE",
             })
 
-            mutate("/api/cart/get")
+                await mutate(["/api/cart/get", cartId]);
 
 
             setCartItems(prev => prev.filter(item => item.id !== productId));
