@@ -25,7 +25,7 @@ export async function getOrCreateCart() {
   if (!cart) {
     // fallback create new and set cookie
     const newCart = await db.cart.create({ data: {} });
-    (await cookieStore).set({ name: "cart_id", value: newCart.id, httpOnly: true, path: "/", maxAge: 60*60*24*7 });
+    (await cookieStore).set({ name: "cart_id", value: newCart.id, httpOnly: true, path: "/", maxAge: 60*60*24*1 });
     return newCart;
   }
   return cart;

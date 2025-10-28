@@ -68,9 +68,9 @@ export default function PickupDetails({
             });
             if (res.ok) {
                 const data = await res.json()
-                toast(`${data.message}`)
-                mutate("/api/cart/get");
+                await mutate("/api/cart/get");
                 router.refresh()
+                toast(`${data.message}`)
 
             }
 

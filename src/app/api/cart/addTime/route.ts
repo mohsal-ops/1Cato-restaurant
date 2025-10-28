@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   const {pickupTime, pickupDay } = await req.json();
+  
   try {
     const cart = await getOrCreateCart();
   // Upsert item: if productId exists, increase qty
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
     });
   }
     revalidatePath('cart')
+    
 
   return NextResponse.json({ok:true , message : 'Time added succefuly'})
     

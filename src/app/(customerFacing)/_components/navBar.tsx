@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { usePathname } from "next/navigation";
-import { useCart } from "@/app/providers/CartProvider";
 
 
 
@@ -41,7 +40,15 @@ export function SideBar({ pathname }: { pathname: string }) {
   );
 }
 
-
+const fetcher = async (url: string, cartId: string | null) => {
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-cart-id": cartId ?? "",
+    },
+  });
+  return res.json();
+};
 
 export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
   // console.log("🔁 TopNavBar rendered");
@@ -49,8 +56,19 @@ export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
   const pathname = usePathname();
   const [cartId, setCartId] = useState<string | null>(initialCartId);
 
-  const { cartItems } = useCart();
+  useEffect(() => {
+    const fetchCartId = async () => {
+      const res = await fetch("/api/getcartId");
+      const data = await res.json();
+      setCartId(data.cartId);
+    };
+    fetchCartId();
+  }, []);
 
+  // 🧠 Pass a stable key and avoid dependency loops
+  const { data: CartResObj } = useSWR(cartId ? ["/api/cart/get", cartId] : null, ([url, id]) => fetcher(url, id),{ revalidateOnFocus: false });
+
+  const cartItems = (CartResObj?.cart?.items ?? []) as CartItem[];
   const links = [
     {
       name: "Menu",
@@ -80,6 +98,7 @@ export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
   ]
   
 
+    // setCartItems(cartItems)
 
 
   return (
