@@ -17,6 +17,7 @@ import { CartItem } from "@prisma/client"
 import useSWR, { useSWRConfig } from "swr"
 import { useRouter } from "next/navigation"
 import { DialogTrigger } from "@radix-ui/react-dialog"
+import { useCart } from "@/app/providers/CartProvider"
 
 
 
@@ -291,6 +292,7 @@ export default function SchedulePickupDialog({
   const { mutate } = useSWRConfig();
   
   const route = useRouter()
+  const {cartId } = useCart()
 
 
   useEffect(() => {
@@ -331,11 +333,12 @@ export default function SchedulePickupDialog({
 
 
       const data = await res.json();
-      
+      await mutate(["/api/cart/get", cartId]);
+      route.refresh()
+
       toast(data.message);
 
-      mutate("/api/cart/get");
-      route.refresh()
+      
 
 
       if (!res.ok) throw new Error("Failed to add to cart");
