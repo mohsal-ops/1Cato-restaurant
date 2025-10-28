@@ -29,7 +29,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [open, setOpen] = useState<boolean>(false)
-    const { cartItems,cartId,mutate } = useCart();
+    const { cartItems, cartId, mutate } = useCart();
 
 
     const Router = useRouter()
@@ -88,19 +88,16 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
 
 
     useEffect(() => {
-        if (cartItems && cartItems.length > 0) {
+        // Only run when cartItems first become available
+        if (cartItems && cartItems.length > 0 && !selectedDay && !selectedTime) {
             const Day = cartItems[0].pickupDay
                 ? new Date(cartItems[0].pickupDay)
                 : null;
-            const time = cartItems[0].pickupTime
-            setSelectedDay(Day)
-            setSelectedTime(time)
-
+            const time = cartItems[0].pickupTime;
+            setSelectedDay(Day);
+            setSelectedTime(time);
         }
-        mutate(["/api/cart/get", cartId]);
-        Router.refresh()
-    }, [])
-
+    }, [cartItems]);
 
 
 
@@ -163,7 +160,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
                                 <input
                                     type=""
                                     name="orderType"
-                                   className='hidden peer'
+                                    className='hidden peer'
                                 />
                                 {/* <div className="h-full  bg-stone-200 border  flex items-center justify-center  rounded-3xl peer-checked:shadow-md peer-checked:border-gray-300 peer-checked:bg-white peer-checked:text-black transition">
                                     Delivery
@@ -271,7 +268,7 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
     )
 }
 
-export function PopularDishes({ cartItems, Poularproducts }: {cartItems:CartItem[], Poularproducts: Item[] | undefined }) {
+export function PopularDishes({ cartItems, Poularproducts }: { cartItems: CartItem[], Poularproducts: Item[] | undefined }) {
 
     const products = Poularproducts;
     return (
@@ -294,7 +291,7 @@ export function PopularDishes({ cartItems, Poularproducts }: {cartItems:CartItem
     )
 }
 
-export function AllDishes({ cartItems ,Products }: {cartItems:CartItem[],  Products: Item[] }) {
+export function AllDishes({ cartItems, Products }: { cartItems: CartItem[], Products: Item[] }) {
 
     return (
         <div className="flex space-y-6  w-full">

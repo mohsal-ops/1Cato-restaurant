@@ -14,7 +14,6 @@ import Image from "next/image"
 import { formatCurrency } from "@/lib/formatters"
 import { toast } from "sonner"
 import { CartItem } from "@prisma/client"
-import useSWR, { useSWRConfig } from "swr"
 import { useRouter } from "next/navigation"
 import { DialogTrigger } from "@radix-ui/react-dialog"
 import { useCart } from "@/app/providers/CartProvider"
@@ -270,7 +269,6 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product: Product;
-  cartItems: CartItem[]
 };
 
 
@@ -278,7 +276,6 @@ export default function SchedulePickupDialog({
   open,
   onOpenChange,
   product,
-  cartItems
 }: Props) {
   const [step, setStep] = useState<"details" | "schedule" | "addCard">(
     "details"
@@ -286,12 +283,13 @@ export default function SchedulePickupDialog({
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [isLoading , setIsLoading] =useState<boolean>(false)
   const [TimeExist, setTimeExist] = useState<boolean>(false)
 
 
   
   const route = useRouter()
-  const {cartId,mutate } = useCart()
+  const {cartId,mutate,cartItems } = useCart()
 
 
   useEffect(() => {
@@ -315,6 +313,7 @@ export default function SchedulePickupDialog({
 
 
   const handleAddToCart = async () => {
+    setIsLoading(true)
     try {
       const res = await fetch("/api/cart/add", {
         method: "POST",
@@ -336,6 +335,7 @@ export default function SchedulePickupDialog({
       route.refresh()
 
       toast(data.message);
+      onOpenChange(false);
 
       
 
@@ -347,6 +347,8 @@ export default function SchedulePickupDialog({
     } catch (error) {
       console.error(error);
       toast("Something went wrong while adding to cart.");
+    }finally{
+      setIsLoading(true)
     }
   };
 
@@ -435,8 +437,9 @@ export default function SchedulePickupDialog({
               variant="mainButton"
               className="w-full"
               onClick={handleAddToCart}
+              disabled={isLoading} 
             >
-              Add to Cart
+              {isLoading ? "Adding..." : "Add to Cart"}
             </Button>
           )}
         </DialogFooter>

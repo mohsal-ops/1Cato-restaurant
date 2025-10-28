@@ -66,7 +66,7 @@ export default function ProductCardClient({
                 </CardContent>
             </Card>
             <div className="font-semibold text-lg ">{name}</div>
-            <SchedulePickupDialog cartItems={cartItems} product={ProductInfos} open={open} onOpenChange={setOpen} />
+            <SchedulePickupDialog  product={ProductInfos} open={open} onOpenChange={setOpen} />
 
         </div>
     );
@@ -117,7 +117,7 @@ export function PopularDishesCardClient({
                 <p>{name}</p>
                 <p>{formatCurrency(priceInCents / 100)}</p>
             </div>
-            <SchedulePickupDialog cartItems={cartItems} product={ProductInfos} open={open} onOpenChange={setOpen} />
+            <SchedulePickupDialog  product={ProductInfos} open={open} onOpenChange={setOpen} />
 
         </div>
     );
@@ -171,7 +171,7 @@ export function AllDishesCardClient({
                     </div>
                 </CardContent>
             </Card>
-            <SchedulePickupDialog cartItems={cartItems} product={ProductInfos} open={open} onOpenChange={setOpen} />
+            <SchedulePickupDialog product={ProductInfos} open={open} onOpenChange={setOpen} />
 
 
         </div>
