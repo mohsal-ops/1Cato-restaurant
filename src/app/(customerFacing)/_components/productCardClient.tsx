@@ -28,7 +28,6 @@ export default function ProductCardClient({
     image,
     cartItems
 }: productObjectPath) {
-    const [isLoading, setisLoading] = useState<boolean>(false);
     const [open, setOpen] = useState(false)
 
     const ProductInfos = {
@@ -38,28 +37,9 @@ export default function ProductCardClient({
         image,
     }
 
-    const hndler = async () => {
-        setisLoading(true);
-        const response = await fetch("/api/addtowishlist", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-        });
-        if (response.status === 500) {
-            setisLoading(false);
-        }
-
-        if (response.ok) {
-            setisLoading(false);
-        } else {
-            setisLoading(false);
-        }
-    };
     return (
-        <div>
-            <Card className="flex  overflow-hidden gap-5 h-80 flex-col w-80  " key={id}>
+        <div className='space-y-3'>
+            <Card className="flex  overflow-hidden gap-5 h-72 flex-col w-72  " key={id}>
                 {/* <CardHeader className="relative w-full h-5/6 aspect-video">
                 </CardHeader> */}
                 <CardContent className="flex items-end relative h-full p-0 w-full text-center " >
@@ -73,23 +53,19 @@ export default function ProductCardClient({
                             className='object-cover ' />
 
                     </div>
-                    <div className='absolute z-10 flex items-end mask-t-from-10% mask-t-to-25% justify-between h-full bg-black w-full p-3 '>
+                    <div className='absolute z-10 flex items-end h-full  w-full p-3 '>
                         <div className="flex  flex-col gap-4 z-20 ">
                             <CardTitle className="font-semibold text-lg text-white ">{name}</CardTitle>
                         </div>
-                        <div className='flex gap-2 items-center  '>
-                            <Button size="icon" variant="outline" className=' rounded-full '>
-                                <PiHeartStraightThin onClick={hndler} size={15} />
-                            </Button>
-                            <Button onClick={() => setOpen(true)} variant="outline" className='w-10 h-10 '><Plus className="stroke-1" size={28} /></Button>
-
-
+                        <div className='flex gap-2 items-center absolute right-2 z-40 '>
+                            <Button onClick={() => setOpen(true)} variant="outline" className=' w-10 h-10 '><Plus className="stroke-1" size={28} /></Button>
                         </div>
 
                     </div>
 
                 </CardContent>
             </Card>
+            <div className="font-semibold text-lg ">{name}</div>
             <SchedulePickupDialog cartItems={cartItems} product={ProductInfos} open={open} onOpenChange={setOpen} />
 
         </div>
@@ -114,11 +90,11 @@ export function PopularDishesCardClient({
 
     return (
         <div className='space-y-2'>
-            <Card className="flex rounded-2xl overflow-hidden gap-5 h-36 flex-col w-36  " key={id}>
+            <Card className="flex rounded-2xl overflow-hidden gap-5 sm:[h-60 w-60]  h-36 flex-col w-36  " key={id}>
                 {/* <CardHeader className="relative w-full h-5/6 aspect-video">
                 </CardHeader> */}
                 <CardContent className=" flex items-end relative h-full p-0 w-full text-center " >
-                    <div className='relative top-0 h-full w-full bg-black' >
+                    <div className='relative top-0 h-full w-full ' >
                         <Image
                             src={image}
                             fill

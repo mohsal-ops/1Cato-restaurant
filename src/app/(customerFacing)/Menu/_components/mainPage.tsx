@@ -9,16 +9,16 @@ import PickupDetails from '../../_components/pickupTimeandDay'
 import { useSWRConfig } from 'swr'
 import { ProductCardSkeleton } from '../../_components/ProductCardServer'
 import { useRouter } from 'next/navigation'
+import { useCart } from '@/app/providers/CartProvider'
 
 type PropsTypes = {
     places: Location[],
     gategories: Types[],
     products: Item[],
     featuredProducts: Item[]
-    cartItems: CartItem[] 
 } & React.HTMLAttributes<HTMLDivElement>
 
-export default function MainPageMenu({cartItems, featuredProducts, style, places, gategories, products }: PropsTypes) {
+export default function MainPageMenu({ featuredProducts, style, places, gategories, products }: PropsTypes) {
     const [filtered, setfiltered] = useState<Item[] | undefined>()
     const [choice, setChoice] = useState<"delivery" | "pickup" | null>("pickup");
     const [query, setQuery] = useState("");
@@ -29,6 +29,8 @@ export default function MainPageMenu({cartItems, featuredProducts, style, places
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
     const [open, setOpen] = useState<boolean>(false)
+    const { cartItems } = useCart();
+
 
     const { mutate } = useSWRConfig()
     const Router = useRouter()
@@ -274,8 +276,8 @@ export function PopularDishes({ cartItems, Poularproducts }: {cartItems:CartItem
 
     const products = Poularproducts;
     return (
-        <div className="flex-col space-y-6  sm:w-10/12 w-full">
-            <div className="grid grid-flow-col justify-start gap-4 w-full  overflow-auto  py-2">
+        <div className="flex-col space-y-6  w-full">
+            <div className="grid grid-flow-col justify-start gap-4 w-full no-scrollbar overflow-auto  py-2">
                 <Suspense
                     fallback={
                         <>

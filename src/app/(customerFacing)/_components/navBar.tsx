@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/app/providers/CartProvider";
 
 
 
@@ -19,7 +20,7 @@ export function SideBar({ pathname }: { pathname: string }) {
     <div className="flex w-full  justify-between h-20 items-center ">
       <div className="flex items-center justify-center pl-7">
         <Link href="/">
-          <Image alt="snow cone logo" priority   className=" w-auto h-auto" src={Logo} height={50} width={50} />
+          <Image alt="snow cone logo" priority className=" w-auto h-auto" src={Logo} height={50} width={50} />
         </Link>
       </div>
 
@@ -40,8 +41,16 @@ export function SideBar({ pathname }: { pathname: string }) {
   );
 }
 
-export function TopNavBar() {
-  const pathname = usePathname()
+
+
+export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
+  // console.log("🔁 TopNavBar rendered");
+
+  const pathname = usePathname();
+  const [cartId, setCartId] = useState<string | null>(initialCartId);
+
+  const { cartItems } = useCart();
+
   const links = [
     {
       name: "Menu",
@@ -69,32 +78,9 @@ export function TopNavBar() {
       link: "/MarketingCollab"
     },
   ]
-  const [cartId, setCartId] = useState<string | null>(null);
+  
 
 
-
-
-  useEffect(() => {
-    const fetchCartId = async () => {
-      const res = await fetch("/api/getcartId")
-      const data = await res.json();
-      setCartId(data.cartId);
-    };
-    fetchCartId();
-
-  }, []);
-  const fetcher = (url: string) =>
-    fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-cart-id": cartId ?? "",
-      },
-    }).then((res) => res.json());
-
-
-
-  const { data: CartResObj } = useSWR(cartId ? "/api/cart/get" : null, fetcher);
-  const cartItems = (CartResObj?.cart?.items ?? []) as CartItem[]
 
   return (
     <div className="bg-white flex justify-center " >

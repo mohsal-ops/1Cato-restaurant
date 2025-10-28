@@ -6,17 +6,20 @@ import { Button } from '@/components/ui/button'
 import { AllDishesSuspense, PopularDishesSuspense } from '../_components/ProductSuspense'
 import { GetFeaturedProducts, GetGategories } from '../_actions/getDataNeeded'
 import { ProductCardSkeleton } from '../../_components/ProductCardServer'
+import { useCart } from '@/app/providers/CartProvider'
 
 
 type PropsTypes = {
     gategories: Types[],
     products: Item[],
-    cartItems: CartItem[]
+
 } & React.HTMLAttributes<HTMLDivElement>
 
-export default function CateringMainPage({ cartItems, style, gategories, products }: PropsTypes) {
+export default function CateringMainPage({ style, gategories, products }: PropsTypes) {
     const [choice, setChoice] = useState<"delivery" | "pickup" | null>("pickup");
     const [query, setQuery] = useState("");
+    const { cartItems } = useCart();
+
 
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
 

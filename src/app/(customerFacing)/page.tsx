@@ -143,7 +143,7 @@ export function TopSection() {
 export function SecondSection({ products, cartItems }: { products: Item[], cartItems: CartItem[] }) {
 
   return (
-    <div className="flex-col space-y-6 p-3 sm:w-10/12 w-full  overflow-hidden">
+    <div className="flex-col space-y-5 p-3 sm:w-[85vw] w-full  overflow-hidden">
       <div className="flex justify-between">
         <PageHeader>Featured</PageHeader>
         <Link href="/Menu"  >
@@ -152,7 +152,7 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
           </Button>
         </Link>
       </div>
-      <div className="grid grid-flow-col justify-start gap-7 w-full  overflow-auto  pb-10">
+      <div className="grid grid-flow-col justify-start gap-7 w-full  overflow-auto no-scrollbar pb-10">
         <Suspense
           fallback={
             <>
@@ -216,7 +216,7 @@ export function ReviewsSection() {
     }
   ]
   return (
-    <div className=" flex flex-col items-center  md:w-10/12 p-10 space-y-10 bg-gray-100 rounded-4xl">
+    <div className=" flex flex-col items-center  md:w-[85vw] p-10 space-y-10 bg-gray-100 rounded-4xl">
       <div className="text-center space-y-4">
         <PageHeader>What our guests are saying</PageHeader>
       </div>
@@ -233,7 +233,7 @@ export function ReviewsSection() {
 
 export function OrderDirectlyfromOUrWebsite() {
   return (
-    <div className="relative flex items-end max-h-svh sm:w-10/12  rounded-3xl overflow-hidden   ">
+    <div className="relative flex items-end max-h-svh sm:w-[85vw]  rounded-3xl overflow-hidden   ">
       <Image priority src={mainImg} alt="best snow cone in NYC" className="object-cover w-full h-full" />
       <div className="p-1 - absolute  md:left-30  md:top-1/3 sm:w-[50rem] ">
         <Card className=" md:p-8 md:space-y-4 bg-stone-300 rounded-3xl  md:w-[45rem]">
@@ -257,7 +257,7 @@ export function OrderDirectlyfromOUrWebsite() {
 }
 export function DistinctiveFeatures() {
   return (
-    <div className="flex flex-col space-y-5 md:w-10/12 rounded-3xl overflow-hidden ">
+    <div className="flex flex-col space-y-5 md:w-[85vw] rounded-3xl overflow-hidden ">
       <div className="flex md:flex-row flex-col justify-between  md:h-[33rem] h-full">
         <Image priority src={img2} alt="Refreshing snow cones" className="object-cover md:w-[45%] w-full h-full rounded-3xl" />
         <div className="flex flex-col space-y-7 p-5 justify-center   md:w-[45%] w-full h-full">
@@ -336,7 +336,7 @@ export function RewardsProgram() {
 
 export function Frequentlyaskedquestions() {
   return (
-    <div className="flex items-center w-full flex-col md:py-10 md:w-10/12 overflow-hidden ">
+    <div className="flex items-center w-full flex-col md:py-10 md:w-[85vw] overflow-hidden ">
       <div className="mb-10">
         <PageHeader >Frequently asked questions</PageHeader>
       </div>
