@@ -56,6 +56,7 @@ export const GetCartItems = cache(async (cartId) => {
         include: { items: true }
     });
 
+
     if(!cart ) return {items:[]}
 
     return cart

@@ -98,9 +98,9 @@ export default function MainPageMenu({ featuredProducts, style, places, gategori
             setSelectedTime(time)
 
         }
-        mutate(["/api/cart/get", cartId]);
+        // mutate(["/api/cart/get", cartId]);
         Router.refresh()
-    }, [cartItems])
+    }, [])
 
 
 

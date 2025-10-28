@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TextAlignJustify } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import db from '@/db/db';
 
 
 export default function AppSideBar() {
@@ -36,6 +38,9 @@ export default function AppSideBar() {
       link: "MarketingCollab"
     },
   ]
+  const hndleclick = async () => {
+    await fetch('/api/getcartId')
+  }
 
   return <>
     <div className="flex overflow-auto gap-8 justify-center   ">

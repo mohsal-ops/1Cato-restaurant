@@ -3,6 +3,8 @@ import { TopNavBar } from "./_components/navBar";
 import { Footer } from "./page";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
+import { Button } from "@/components/ui/button";
+import db from "@/db/db";
 
 
 
@@ -15,6 +17,8 @@ export default async function Customerlayout({
 
   const dynamic = "force-dynamic";
   const cartId = (await cookies()).get("cart_id")?.value ?? null;
+  
+
 
 
 

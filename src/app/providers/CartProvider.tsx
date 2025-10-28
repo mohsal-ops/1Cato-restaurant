@@ -42,7 +42,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // ✅ useSWR only runs when cartId is available
   const { data: CartResObj } = useSWR(
     cartId ? ["/api/cart/get", cartId] : null,
-    ([url, id]) => fetcher(url, id)
+    ([url, id]) => fetcher(url, id),
+     { revalidateOnFocus: false }
   );
 
   const cartItems = CartResObj?.cart?.items ?? [];

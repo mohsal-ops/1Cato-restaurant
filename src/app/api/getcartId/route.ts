@@ -1,4 +1,5 @@
 // app/api/cart/get/route.ts
+import db from "@/db/db";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

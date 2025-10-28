@@ -1,8 +1,7 @@
 import React from 'react'
-import { GetCartItems, GetFeaturedProducts, GetGategories, GetPlaces, GetProducts } from './_actions/getDataNeeded'
+import { GetFeaturedProducts, GetGategories, GetPlaces, GetProducts } from './_actions/getDataNeeded'
 import MainPageMenu from './_components/mainPage'
-import { cookies } from 'next/headers';
-import { useCart } from '@/app/providers/CartProvider';
+
 
 export default async function Menu() {
 
@@ -13,14 +12,8 @@ export default async function Menu() {
     GetGategories(),
     GetProducts()
    ])
-
-
-
-
-
   return (
       <MainPageMenu featuredProducts={featuredProducts}  places={places} products={products} gategories={categories} />
-
   )
 }
 
