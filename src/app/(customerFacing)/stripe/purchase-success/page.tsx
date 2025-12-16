@@ -6,9 +6,7 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-// ✅ Works 100% with Next.js 15.1+
 export default async function Success(props: any) {
-  // Next 15 sometimes wraps searchParams as a Promise, sometimes not.
   const searchParams = await Promise.resolve(props.searchParams);
   const payment_intent = searchParams?.payment_intent;
 
