@@ -456,3 +456,4 @@ export default function SchedulePickupDialog({
 
 
 
+// I am currently working on re-engaging restaurants that I previously contacted about offering them a free website as a lead magnet. I want you to provide me with effective follow-up strategies and sample messages to reconnect with these restaurants after a month of inactivity. The result I want is a structured approach to rekindle interest, build rapport, and ultimately close the deal for the paid service after they experience the free website offer.
