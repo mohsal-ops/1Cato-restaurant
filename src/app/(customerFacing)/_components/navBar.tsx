@@ -76,12 +76,12 @@ export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
     },
     {
       name: "Catering",
-      link: "/Menu/Catering"
-    },
-    {
-      name: "Host an event",
       link: "/HostEvent"
     },
+    // {
+    //   name: "Host an event",
+    //   link: "/HostEvent"
+    // },
     {
       name: "Gift Card",
       link: "/GiftCard"
@@ -92,8 +92,8 @@ export function TopNavBar({ initialCartId }: { initialCartId: string | null }) {
 
     // },
     {
-      name: "Marketing Collaboration",
-      link: "/MarketingCollab"
+      name: "Brand Marketing",
+      link: "/BrandMarketing"
     },
   ]
   

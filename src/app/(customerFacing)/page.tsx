@@ -17,16 +17,45 @@ import { MdOutlineFamilyRestroom } from "react-icons/md";
 import { BsBagCheckFill } from "react-icons/bs";
 import { TbPlant2Off } from "react-icons/tb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import Map from "@/components/map";
 import GetPlaces from "./_components/getPlaces";
 import Logo from "@/../public/general/logo.png"
 import { GetCartItems, GetFeaturedProducts } from "./Menu/_actions/getDataNeeded";
-import { ProductCardSkeleton } from "./_components/ProductCardServer";
 import { cookies } from "next/headers";
-import { ThirdSectionComponent } from "./_components/AnimatedImages";
 import { Button } from "@/components/ui/button";
+import HomeFeaturedSkeleton from "./_skeletons/HomeFeaturedSkeleton";
+import dynamic from "next/dynamic";
+import FadeIn from "@/components/FadeIn";
+import MapClient from "@/components/MapClient";
+import ThirdSectionClient from "./_components/ThirdSectionClient";
 
 
+function LocalBusinessSchema() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "1Cato Snow Cones",
+          image: "https://1cato.com/general/mainImage.jpg",
+          priceRange: "$",
+          telephone: "(619) 443-2165",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "921 E 86th St",
+            addressLocality: "Brooklyn",
+            addressRegion: "NY",
+            postalCode: "11236",
+            addressCountry: "US"
+          },
+          url: "https://1cato.com",
+          sameAs: ["https://www.instagram.com/1cato", "https://www.facebook.com/1cato"]
+        }),
+      }}
+    />
+  );
+}
 
 
 export const metadata = {
@@ -56,56 +85,50 @@ export const metadata = {
 export default async function Home() {
 
   // Server-side fetch for SEO
-  const products: Item[] = await GetFeaturedProducts();
   const cartId = (await cookies()).get("cart_id")?.value;
-  const cart = cartId ? await GetCartItems(cartId) : null
 
-  const placesRes = await GetPlaces();
+  const [products, cart, placesRes] = await Promise.all([
+    GetFeaturedProducts(),
+    cartId ? GetCartItems(cartId) : Promise.resolve(null),
+    GetPlaces(),
+  ]);
+
   const places: Location[] = placesRes?.places ?? [];
   const lat = places[0]?.lat ?? 0;
   const lng = places[0]?.lng ?? 0;
   return (
     <>
       {/* ---------------- JSON-LD LocalBusiness ---------------- */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            name: "1Cato Snow Cones",
-            image: "https://1cato.com/general/mainImage.jpg",
-            priceRange: "$",
-            telephone: "(619) 443-2165",
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: "921 E 86th St",
-              addressLocality: "Brooklyn",
-              addressRegion: "NY",
-              postalCode: "11236",
-              addressCountry: "US"
-            },
-            url: "https://1cato.com",
-            sameAs: ["https://www.instagram.com/1cato", "https://www.facebook.com/1cato"]
-          }),
-        }}
-      />
+      <LocalBusinessSchema />
+
       <div className="flex pt-20 flex-col gap-8 items-center justify-center  md:space-y-20 space-y-10  [&>*:not(:first-child)]:m-2">
         <TopSection />
         <SecondSection products={products} cartItems={cart?.items ?? []} />
-        <ThirdSection />
-        <ReviewsSection />
-        <div className="p-2 w-full flex justify-center">
-          <OrderDirectlyfromOUrWebsite />
-        </div>
-        <Featuring />
-        <DistinctiveFeatures />
+        <ThirdSectionClient />
+        <FadeIn delay={100}>
+          <ReviewsSection />
+        </FadeIn>
+        <FadeIn delay={200}>
+          <div className="p-2 w-full flex justify-center">
+            <OrderDirectlyfromOUrWebsite />
+          </div>
+        </FadeIn>
+        <FadeIn delay={300}>
+          <Featuring />
+        </FadeIn>
+        <FadeIn delay={400}>
+
+          <DistinctiveFeatures />
+        </FadeIn>
         {/* <div className="p-2 w-full">
           <RewardsProgram />
         </div> */}
-        <div className="p-4 w-full flex justify-center">
-          <Frequentlyaskedquestions />
-        </div>
+        <FadeIn delay={500}>
+          <div className="p-4 w-full flex justify-center">
+            <Frequentlyaskedquestions />
+          </div>
+        </FadeIn>
+
         <OurLocation places={places} lat={lat} lng={lng} />
 
       </div>
@@ -153,16 +176,8 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
         </Link>
       </div>
       <div className="grid grid-flow-col justify-start gap-7 w-full  overflow-auto no-scrollbar pb-10">
-        <Suspense
-          fallback={
-            <>
-              <ProductCardSkeleton />
-              <ProductCardSkeleton />
-              <ProductCardSkeleton />
-            </>
-          }
-        >
-          <ProductSuspense  cartItems={cartItems} products={products} />
+        <Suspense fallback={<> <HomeFeaturedSkeleton /> </>} >
+          <ProductSuspense cartItems={cartItems} products={products} />
         </Suspense>
       </div>
     </div>
@@ -170,11 +185,7 @@ export function SecondSection({ products, cartItems }: { products: Item[], cartI
   )
 }
 
-export function ThirdSection() {
-  return (
-    <ThirdSectionComponent />
-  )
-}
+
 
 
 function ReviewCard({ name, review }: { name: string, review: string }) {
@@ -234,7 +245,7 @@ export function ReviewsSection() {
 export function OrderDirectlyfromOUrWebsite() {
   return (
     <div className="relative flex items-end max-h-svh sm:w-[85vw]  rounded-3xl overflow-hidden   ">
-      <Image priority src={mainImg} alt="best snow cone in NYC" className="object-cover w-full h-full" />
+      <Image loading="lazy" src={mainImg} alt="best snow cone in NYC" className="object-cover w-full h-full" />
       <div className="p-1 - absolute  md:left-30  md:top-1/3 sm:w-[50rem] ">
         <Card className=" md:p-8 md:space-y-4 bg-stone-300 rounded-3xl  md:w-[45rem]">
           <CardHeader>
@@ -259,7 +270,7 @@ export function DistinctiveFeatures() {
   return (
     <div className="flex flex-col space-y-5 md:w-[85vw] rounded-3xl overflow-hidden ">
       <div className="flex md:flex-row flex-col justify-between  md:h-[33rem] h-full">
-        <Image priority src={img2} alt="Refreshing snow cones" className="object-cover md:w-[45%] w-full h-full rounded-3xl" />
+        <Image loading="lazy" src={img2} alt="Refreshing snow cones" className="object-cover md:w-[45%] w-full h-full rounded-3xl" />
         <div className="flex flex-col space-y-7 p-5 justify-center   md:w-[45%] w-full h-full">
           <PageHeader>Only refreshing scow cones</PageHeader>
           <p className="text-lg font-medium text-gray-500">We invest in quality ingredients to ensure our customers get the great taste we're famous for. Because we believe that you deserve the best.</p>
@@ -270,7 +281,7 @@ export function DistinctiveFeatures() {
           <PageHeader>Sip, chill, and smile</PageHeader>
           <p className="text-lg font-medium text-gray-500">Our drinks are made to refresh your day, using real fruits, balanced flavors, and the perfect chill for every moment.</p>
         </div>
-        <Image priority src={img3} alt="Refreshing snow cones" className="object-cover flex items-start bg-amber-200 md:order-2 order-1 md:w-[45%] w-full h-full rounded-3xl" />
+        <Image loading="lazy" src={img3} alt="Refreshing snow cones" className="object-cover flex items-start bg-amber-200 md:order-2 order-1 md:w-[45%] w-full h-full rounded-3xl" />
       </div>
 
     </div>
@@ -365,7 +376,7 @@ export function Frequentlyaskedquestions() {
         <AccordionItem value="item-4">
           <AccordionTrigger >Where are you located?</AccordionTrigger>
           <AccordionContent className="text-balance text-lg font-semibold bg-sidebar-accent p-4 ">
-            We are located in <p className="font-bold">921 E 86th St, Brooklyn, NY 11236, United States</p>
+            We are located in <p className="font-bold">Canarsie Brooklyn 11236</p>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -384,7 +395,7 @@ export function OurLocation({ places, lat, lng }: { places: Location[], lat: num
   return (
     <div className=" flex text-sm flex-col sm:flex-row sm:justify-center  sm:items-center p-4  sm:space-x-10 sm:pr-10 h-[35rem] sm:h-[20rem] sm:w-[75%] sm:space-y-0 space-y-5 pb-10 bg-stone-200 rounded-4xl">
       <div className=" h-1/3  sm:h-full sm:w-[35rem] w-full rounded-4xl  overflow-hidden">
-        <Map lat={lat} lng={lng} className="h-full w-full " />
+        <MapClient lat={lat} lng={lng} className="h-full w-full " />
       </div>
 
       <div className="flex flex-col items-end justify-end h-2/3 sm:h-full w-full text-md font-medium space-y-5">
@@ -400,24 +411,24 @@ export function OurLocation({ places, lat, lng }: { places: Location[], lat: num
             </div>
             <div className="space-y-3">
               <h2 className="text-gray-500 ">Contact</h2>
-              <h3>(619) 443-2165<br />ottavioslakeside@gmail.com</h3>
+              <h3>(619) 443-2165<br />1catosnowcone@gmail.com</h3>
             </div>
           </span>
         </div>
         <div className="flex justify-between items-center w-full py-2 border  border-t-gray-300">
           <div>
-            <p>Workinh Hours</p>
-            <span>9:00 AM - 6:00 PM</span>
+            <p>Workinh Days</p>
+            <span>Wednesday to Sunday</span>
           </div>
           <div>
             <Link href="/HostEvent"  >
-            <Button size="sm" variant="mainButton">
-              Book an Event
-              <MdKeyboardArrowRight />
-            </Button>
-          </Link>
+              <Button size="sm" variant="mainButton">
+                Catering
+                <MdKeyboardArrowRight />
+              </Button>
+            </Link>
           </div>
-          
+
         </div>
       </div>
     </div>

@@ -19,23 +19,28 @@ export default function AppSideBar() {
   const links = [
     {
       name: "Menu",
-      link: "Menu"
+      link: "/Menu"
     },
     {
       name: "Catering",
-      link: "Menu/Catering"
+      link: "/HostEvent"
     },
-    {
-      name: "Host an event",
-      link: "HostEvent"
-    },
+    // {
+    //   name: "Host an event",
+    //   link: "/HostEvent"
+    // },
     {
       name: "Gift Card",
-      link: "GiftCard"
+      link: "/GiftCard"
     },
+    // {
+    //   name: "Blog",
+    //   link: "/Blog",
+
+    // },
     {
-      name: "Marketing Collaboration",
-      link: "MarketingCollab"
+      name: "Brand Marketing",
+      link: "/BrandMarketing"
     },
   ]
   const hndleclick = async () => {
@@ -57,7 +62,7 @@ export default function AppSideBar() {
               <Link
                 key={key}
                 className="hover:bg-zinc-100 hover:duration-300 rounded-md text-center px-2 font-medium py-2"
-                href={`/${obj.link}`}
+                href={`${obj.link}`}
               >
                 {obj.name}
               </Link>

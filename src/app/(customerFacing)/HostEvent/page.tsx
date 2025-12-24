@@ -169,9 +169,9 @@ export default function HostEventPage() {
         <h2 className="text-3xl font-bold mb-10">Packages & Pricing</h2>
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { name: "Starter", desc: "Perfect for small parties (up to 50 guests).", price: "From $150" },
-            { name: "Event", desc: "Medium events (50–200 guests).", price: "From $300" },
-            { name: "Festival", desc: "Large-scale service (200+ guests).", price: "Custom Quote" },
+            { name: "Starter", desc: "Perfect for small parties (50–150 guests).", price: "From $350" },
+            { name: "Event", desc: "Medium events (300–600 guests).", price: "From $1200" },
+            { name: "Festival", desc: "Large-scale service (1000+ guests).", price: "Custom Quote" },
           ].map((p, i) => (
             <Card key={i} className="rounded-2xl shadow-md bg-gray-50">
               <CardContent className="p-6 space-y-3">

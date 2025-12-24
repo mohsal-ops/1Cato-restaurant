@@ -60,7 +60,7 @@ export function HoverCard({
     >
       {/* image */}
       <MotionImage
-        priority
+        loading="lazy"
         src={src}
         alt={title}
         className="object-cover w-full h-full"

@@ -3,8 +3,6 @@ import { TopNavBar } from "./_components/navBar";
 import { Footer } from "./page";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
-import { Button } from "@/components/ui/button";
-import db from "@/db/db";
 
 
 
